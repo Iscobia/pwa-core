@@ -1,0 +1,8 @@
+// theme.css
+
+:root {
+  --app-bg: linear-gradient(160deg, #0b252f 0%, #0e303d 100%);
+  --primary-gradient: linear-gradient(160deg, #0b252f 0%, #0e303d 100%);
+  --secundary-gradient: linear-gradient(160deg, #0e303d 0%, #014055 100%);
+  --primary-text: #0b252f;
+}

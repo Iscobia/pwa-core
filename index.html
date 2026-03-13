@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- REMPLACEZ le bloc OneSignal dans le <head> par ceci : -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Configuration PWA -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icônes pour différents appareils -->
+    <link id="app-favicon" rel="icon" href="core/assets/icons/EVOLUTION-192.png">
+    <link id="app-apple-touch-icon" rel="apple-touch-icon" href="core/assets/icons/EVOLUTION-192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="core/style.css">
+    <link rel="stylesheet" href="theme.css">
+    
+    <title>Défis Quotidiens par Sekhamet</title>
+
+    <!------------ Script de OneSignal ------------>
+<script>
+  window.OneSignalGlobal = null;
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.ENABLE_ONESIGNAL) {
+      console.log('🛑 [OneSignal] Désactivé dans config.js');
+      return;
+    }
+
+    const sdk = document.createElement('script');
+    sdk.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+    sdk.defer = true;
+    document.head.appendChild(sdk);
+
+    console.log('📱 [OneSignal] Chargement du SDK...');
+
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+
+    OneSignalDeferred.push(async function(OneSignal) {
+      console.log('📱 [OneSignal] SDK chargé, début init...');
+
+      try {
+        await OneSignal.init({
+          appId: "3ed3f3a4-01f5-407e-a9c5-129c11d6f53b",
+          allowLocalhostAsSecureOrigin: true,
+          promptOptions: {
+            slidedown: {
+              enabled: false
+            }
+          }
+        });
+
+        console.log('✅ [OneSignal] Initialisation réussie');
+        window.OneSignalGlobal = OneSignal;
+      } catch (error) {
+        console.error('❌ [OneSignal] Erreur initialisation:', error);
+        console.log('⚠️ [OneSignal] Fallback vers notifications natives');
+      }
+    });
+  });
+</script>
+
+
+    <!---- Script de configuration (PWA child)  et core/app.js une fois que OneSignal est chargé ---->
+    <script src="config.js"></script>
+    <script src="data/defis.js"></script>
+    <!---- Script pour les notifications paramétrées dans core/notifications.js ---->
+    <script src="core/notifications.js" defer></script>
+    <script src="core/app.js" defer></script>
+</head>
+    
+<body>
+    <div class="app-container">
+        <div id="program-selector"></div>
+        <!-- En-tête -->
+        <header class="app-header">
+              <h1 id="app-main-title">Mon Défi Quotidien</h1>
+              <div class="day-progress">Jour <span id="day-current">1</span>/<span id="day-total">77</span></div>
+        </header>
+        
+        <!-- Défi du jour -->
+        <main class="challenge-container">
+            <h2 id="challenge-title">Chargement...</h2>
+            <p id="challenge-description">Chargement du défi...</p>
+            
+            <button id="mark-done-btn" class="validate-btn">
+                ✅ Marquer comme accompli
+            </button>
+        </main>
+        
+        <!-- Calendrier -->
+        <section class="calendar-section">
+            <h3>📅 Progression</h3>
+            <div id="calendar-grid" class="calendar-grid">
+                <!-- Les jours seront ajoutés par JavaScript -->
+            </div>
+
+            <div class="pause-progression-wrap">
+              <button id="pause-progression-btn" class="pause-progression-btn" type="button">
+                ⏸️ Mettre ma progression en pause
+              </button>
+            </div>
+        </section>
+
+        <!-- Mes notes -->
+        <section class="notes-box" aria-label="Mes notes">
+          <div class="notes-head">
+            <h3>Mes notes 📝</h3>
+            <small id="notes-status" class="notes-status"></small>
+          </div>
+        
+          <textarea
+            id="notes-textarea"
+            class="notes-textarea"
+            placeholder="Écris ici ce que tu ressens, ce que tu observes, tes prises de conscience…"
+            rows="6"></textarea>
+        
+          <div class="notes-actions">
+            <button id="clear-notes-btn" class="notes-clear-btn" type="button">
+              🧹 Effacer les notes du jour
+            </button>
+          </div>
+        </section>
+
+       
+        <!-- Notifications -->
+     <!-- <section class="notifications-settings">
+            <h3>🔔 Notifications</h3>
+            <div class="time-selector">
+                <label>Heure de rappel :</label>
+                <select id="notification-time">
+                    <option value="08:00">08:00</option>
+                    <option value="09:00" selected>09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="18:00">18:00</option>
+                </select>
+            </div>
+
+        </section> -->
+        
+        <!-- Lien vers Systeme.io -->
+        <footer class="app-footer">
+             <div class="footer-content">
+                <img id="footer-logo"
+                     src="core/assets/icons/EVOLUTION-192.png"
+                     alt="EVOLUTION" 
+                     class="footer-logo">
+                <a id="support-link"
+                   href="https://coaching.sekhamet.com/school/course/enveloppe/"
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="systeme-btn">
+                  📚 J'accède à mon Support
+                </a>
+              </div>
+             <img src="core/assets/pictures/arabesque17.webp" 
+                    alt="separator"
+                    class="separator">
+
+            
+            <!-- Section dépannage -->
+            <section class="troubleshooting">
+              <h3>🛠️ Problème technique ?</h3>
+              
+            <div class="trouble-item">
+              <p class="backup-p"><strong>L'app a un comportement bizarre et tu veux la rafraîchir ?</strong></p> 
+                <button id="clear-cache-btn" class="warning-btn">
+              🗑️ Vider le cache maintenant
+                </button>
+              <p class="backup-p"><strong>Tu veux changer de téléphone, sécuriser ta progression ou tu as eu un souci technique ?</strong></p>
+              <div class="backup-buttons">
+                  <button id="export-backup-btn" class="backup-btn">
+                    📤 Exporter ma sauvegarde
+                  </button>
+                  <button id="import-backup-btn" class="backup-btn">
+                    📥 Importer ma progression
+                  </button>
+              </div>
+
+<p id="evolution-backup-warning" class="backup-warning-note" style="display: none;"></p>
+                
+              <!------Bannière invisible si non déclanchée : avertissement si sur Fire Fox ou iOS------->
+              <div id="browser-warning" class="browser-warning" style="display: none;"></div>
+              <!---------------------------------------------------------------------------------------->
+                  
+              <p class="backup-p"><strong>Tu es sur Android et tu as un soucis avec les notifications ?</strong></p>
+              <div class="backup-buttons">
+                <button id="allow-notifications-btn" class="backup-btn">
+                  🔔 Autoriser les notifications
+                </button>
+                <button id="test-notification-android-btn" class="backup-btn">
+                  🧐 Envoyer une notif' test
+                </button>
+              </div>
+              <div class="backup-buttons">
+                <button id="notifications-toggle-btn" class="backup-btn toggle-off">
+                    🔔 Notifications désactivées : Activer les notifications ?
+                </button>
+              </div>
+              <p class="small-note">Ces boutons fonctionnent principalement sur Chrome Android.</p>
+            </div>
+            
+            <div class="trouble-item warning">
+              <p><strong>Tu veux recommencer ton défi de zéro ?</strong></p>
+              <button id="reset-progress-btn" class="danger-btn">
+                ⚠️ Je supprime ma progression
+              </button>
+              <p class="small-note">Attention : cette action est irréversible !</p>
+            </div>
+            </section>
+        </footer>
+    </div>
+
+    <div id="error-banner" class="error-banner" hidden>
+  <div class="error-banner-head">
+    <div class="error-banner-title">⚠️ Un souci technique a été détecté</div>
+    <button id="error-banner-close" class="error-banner-close" type="button" aria-label="Fermer">✕</button>
+  </div>
+  <div id="error-banner-text" class="error-banner-text">
+    L’application a rencontré une erreur. Tu peux ignorer ce message ou envoyer un signalement au support.
+  </div>
+  <div class="error-banner-actions">
+    <button id="error-banner-mail" class="error-banner-btn primary" type="button">
+      📩 Envoyer au support
+    </button>
+    <button id="error-banner-copy" class="error-banner-btn secondary" type="button">
+      📋 Copier les détails
+    </button>
+  </div>
+</div>
+
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker enregistré'))
+                    .catch(err => console.log('Erreur Service Worker:', err));
+            });
+        }
+    </script>
+</body>
+</html>
